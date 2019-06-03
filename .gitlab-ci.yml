@@ -1,14 +1,32 @@
-before_script:
-  - apt-get update -qq && apt-get install -y -qq sqlite3 libsqlite3-dev nodejs
-  - ruby -v
-  - which ruby
-  - gem install bundler --no-document
-  - bundle install --jobs $(nproc)  "${FLAGS[@]}"
-
-rspec:
+heroku:
+  stage: build
+  only:
+    - develop
   script:
-    - bundle exec rspec
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/joftify.git
+    - git push -f heroku develop
 
-rubocop:
+image: node:latest
+
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: build
   script:
-    - bundle exec rubocop
+    - npm install
+  artifacts:
+    paths:
+      - node_modules/
+
+test:
+  stage: test
+  script:
+    - npm install
+    - npm run lint
+    - npm run test:cov

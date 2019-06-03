@@ -3,4 +3,4 @@ coverage
 package-lock.json
 schema.gql
 .env
-dist
+dist/

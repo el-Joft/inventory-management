@@ -16,8 +16,10 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return "project welcome note"', () => {
+      expect(appController.getHello()).toBe(
+        'Welcome to SudJot an Inventory Management System',
+      );
     });
   });
 });
