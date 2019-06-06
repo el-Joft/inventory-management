@@ -18,17 +18,14 @@ heroku:
   only:
     - develop
   script:
-    - git config --global user.name "el-Joft"
-    - git config --global user.email "ottimothy@gmail.com"
     - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/joftify.git
-    - git commit -am "deployment"
     - git push -f heroku develop:master
 
 image: node:latest
 
 stages:
-  - test
   - build
+  - test
 
 cache:
   paths:
