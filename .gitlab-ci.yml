@@ -1,10 +1,3 @@
-install_dependencies:
-  stage: build
-  script:
-    - npm install
-  artifacts:
-    paths:
-      - node_modules/
 
 test:
   stage: test
@@ -13,21 +6,10 @@ test:
     - npm run lint
     - npm run test:cov
 
-heroku:
-  stage: build
-  only:
-    - develop
-  script:
-    - git config --global user.name "el-Joft"
-    - git config --global user.email "ottimothy@gmail.com"
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/joftify.git
-    - git push -f heroku develop:develop
-
 image: node:latest
 
 stages:
   - test
-  - build
 
 cache:
   paths:
