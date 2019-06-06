@@ -1,3 +1,21 @@
+heroku:
+  stage: build
+  only:
+    - develop
+  script:
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/joftify.git
+    - git push -f heroku develop
+
+image: node:latest
+
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - node_modules/
+
 install_dependencies:
   stage: build
   script:
@@ -12,21 +30,3 @@ test:
     - npm install
     - npm run lint
     - npm run test:cov
-
-heroku:
-  stage: build
-  only:
-    - develop
-  script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/joftify.git
-    - git push -f heroku develop:master
-
-image: node:latest
-
-stages:
-  - build
-  - test
-
-cache:
-  paths:
-    - node_modules/
