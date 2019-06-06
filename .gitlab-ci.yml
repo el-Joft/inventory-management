@@ -21,7 +21,7 @@ heroku:
     - git config --global user.name "el-Joft"
     - git config --global user.email "ottimothy@gmail.com"
     - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/joftify.git
-    - git push -f heroku develop:master
+    - git push -f heroku develop:develop
 
 image: node:latest
 
