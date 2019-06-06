@@ -19,14 +19,13 @@ heroku:
     - develop
   script:
     - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/joftify.git
-    - git commit -am "deployment"
     - git push -f heroku develop:master
 
 image: node:latest
 
 stages:
-  - test
   - build
+  - test
 
 cache:
   paths:
