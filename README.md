@@ -1,4 +1,5 @@
 # Inventory management
 
+[![coverage report](https://gitlab.com/el-Joft/inventory-management/badges/develop/coverage.svg)](https://gitlab.com/el-Joft/inventory-management/commits/develop)
 
-![coverage](https://gitlab.com/gitlab-org/gitlab-ce/badges/develop/coverage.svg?job=coverage)
+[![pipeline status](https://gitlab.com/el-Joft/inventory-management/badges/develop/pipeline.svg)](https://gitlab.com/el-Joft/inventory-management/commits/develop)

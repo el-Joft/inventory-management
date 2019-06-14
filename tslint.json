@@ -2,10 +2,18 @@
   "defaultSeverity": "error",
   "extends": "tslint-config-airbnb",
   "rules": {
-    "max-line-length": [true, 80],
+    "max-line-length": [true, 100],
     "interface-name": [true, "always-prefix"],
-    "member-access": [true, "check-constructor", "check-accessor", "check-parameter-property"],
-    "member-ordering": [true, { "order": "instance-sandwich", "alphabetize": true }],
+    "member-access": [
+      true,
+      "check-constructor",
+      "check-accessor",
+      "check-parameter-property"
+    ],
+    "member-ordering": [
+      true,
+      { "order": "instance-sandwich", "alphabetize": true }
+    ],
     "object-literal-sort-keys": [true, "shorthand-first", "ignore-case"],
     "ordered-imports": [true, { "grouped-imports": true }],
     "space-before-function-paren": [
@@ -36,7 +44,12 @@
     "no-default-export": true,
     "prefer-conditional-expression": [true, "check-else-if"],
     "no-unused-expression": [true, "allow-fast-null-checks", "allow-new"],
-    "no-unnecessary-class": [true, "allow-empty-class", "allow-static-only", "allow-constructor-only"],
+    "no-unnecessary-class": [
+      true,
+      "allow-empty-class",
+      "allow-static-only",
+      "allow-constructor-only"
+    ],
     "no-this-assignment": [true, { "allow-destructuring": true }],
     "no-return-await": true,
     "no-debugger": true,
@@ -45,7 +58,11 @@
     "forin": true,
     "await-promise": [true, "Thenable"],
     "prefer-for-of": true,
-    "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
+    "only-arrow-functions": [
+      true,
+      "allow-declarations",
+      "allow-named-functions"
+    ],
     "no-inferrable-types": true,
     "typedef": [
       true,
