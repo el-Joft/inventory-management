@@ -3,9 +3,8 @@ import {
   BaseEntity,
   Column,
   Entity,
-  ObjectID,
-  ObjectIdColumn,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { User } from './user.entity';
@@ -14,8 +13,8 @@ import { User } from './user.entity';
 @Entity()
 export class Role extends BaseEntity {
   @Field(() => ID)
-  @ObjectIdColumn()
-  public id: ObjectID;
+  @PrimaryGeneratedColumn('uuid')
+  public id: string;
 
   @Field()
   @Column()

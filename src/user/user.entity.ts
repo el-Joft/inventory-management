@@ -1,5 +1,4 @@
-import { Branch } from 'src/branch/branch.entity';
-import { Field, ID, Int, ObjectType } from 'type-graphql';
+import { Field, ID, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   Column,
@@ -7,10 +6,10 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  ObjectID,
-  ObjectIdColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { Branch } from '../branch/branch.entity';
 import { Business } from '../business/business.entity';
 
 import { Role } from './role.entity';
@@ -24,7 +23,9 @@ export class User extends BaseEntity {
   public branches: Branch[];
 
   @Field(() => [Business])
-  @ManyToMany(() => Business, (business: Business) => business.users)
+  @ManyToMany(() => Business, (business: Business) => business.users, {
+    cascade: true,
+  })
   @JoinTable()
   public businesses: Business[];
 
@@ -33,26 +34,34 @@ export class User extends BaseEntity {
   public email: string;
 
   @Field()
-  @Column()
+  @Column({ default: false })
+  public emailVerified: boolean;
+
+  @Field()
+  @Column({ nullable: true })
   public firstName: string;
 
   @Field(() => ID)
-  @ObjectIdColumn()
-  public id: ObjectID;
+  @PrimaryGeneratedColumn('uuid')
+  public id: number;
 
   @Field()
-  @Column()
-  public lastName: string;
+  @Column({ default: false })
+  public isActive: boolean;
+
+  @Field()
+  @Column({ nullable: true })
+  public lastName?: string;
 
   @Column()
   public password: string;
 
-  @Field(() => Int)
+  @Field()
   @Column()
-  public phoneNumber: number;
+  public phoneNumber: string;
 
-  @Field({ nullable: true })
-  @Column()
+  @Field()
+  @Column({ nullable: true })
   public profileImage?: string;
 
   @Field(() => Role)

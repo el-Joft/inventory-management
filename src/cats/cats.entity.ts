@@ -1,5 +1,5 @@
 import { Field, ID, Int, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
 @Entity()
@@ -13,8 +13,8 @@ export class Cat extends BaseEntity {
   public breed: string;
 
   @Field(() => ID)
-  @ObjectIdColumn()
-  public id: ObjectID;
+  @PrimaryGeneratedColumn()
+  public id: string;
 
   @Field()
   @Column()

@@ -9,6 +9,7 @@ import { BranchModule } from './branch/branch.module';
 import { BusinessModule } from './business/business.module';
 import { CatsModule } from './cats/cats.module';
 import { databaseConfig } from './dbConfig/config';
+import { SharedModule } from './shared/shared.module';
 import { UserModule } from './user/user.module';
 
 config();
@@ -27,8 +28,8 @@ const entities = process.env[databaseConfig[NODE_ENV].ENTITIES]!;
     TypeOrmModule.forRoot({
       entities: [entities],
       logging: true,
-      synchronize: false,
-      type: 'mongodb',
+      synchronize: true,
+      type: 'postgres',
       url: DB_URL,
     }),
     GraphQLModule.forRoot({
@@ -36,6 +37,7 @@ const entities = process.env[databaseConfig[NODE_ENV].ENTITIES]!;
       introspection: true,
       playground: true,
     }),
+    SharedModule,
   ],
   providers: [AppService],
 })
