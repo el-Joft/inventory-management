@@ -43,7 +43,7 @@ export class User extends BaseEntity {
 
   @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
-  public id: number;
+  public id: string;
 
   @Field()
   @Column({ default: false })
@@ -67,4 +67,7 @@ export class User extends BaseEntity {
   @Field(() => Role)
   @ManyToOne(() => Role, (role: Role) => role.users)
   public role: Role;
+
+  @Column({ nullable: true })
+  public token?: string;
 }

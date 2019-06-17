@@ -2,7 +2,10 @@ import { HttpStatus } from '@nestjs/common';
 import { IsEmail, IsNotEmpty, Length, Validate } from 'class-validator';
 import { Field, InputType, Int, ObjectType } from 'type-graphql';
 
-import { IsPhoneNumber } from '../shared/validation/isPhoneNumber';
+import {
+  IsPhoneNumber,
+  IsPhoneNumberOrEmail,
+} from '../shared/validation/customDTOValidation';
 
 import { User } from './user.entity';
 
@@ -31,6 +34,25 @@ export class CreateUserDTO {
   public phoneNumber: string;
 }
 
+@InputType()
+export class LoginUserDTO {
+  @IsNotEmpty()
+  @Length(1, 255)
+  @Field()
+  public businessName: string;
+
+  @IsNotEmpty()
+  @Length(1, 255)
+  @Field()
+  public password: string;
+
+  @IsNotEmpty()
+  @Length(1, 255)
+  @Validate(IsPhoneNumberOrEmail)
+  @Field()
+  public phoneNumberOrEmail: string;
+}
+
 @ObjectType()
 class MessageType {
   @Field()
@@ -44,10 +66,10 @@ class MessageType {
 export class UserRO {
   @Field(() => MessageType)
   public message: MessageType;
-  @Field()
+  @Field({ nullable: true })
   public token?: string;
   @Field(() => User)
-  public user: Promise<User>;
+  public user: Promise<User> | User;
 }
 
 export class CreateRoleDTO {

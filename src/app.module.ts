@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { config } from 'dotenv';
+import 'dotenv/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -12,7 +12,6 @@ import { databaseConfig } from './dbConfig/config';
 import { SharedModule } from './shared/shared.module';
 import { UserModule } from './user/user.module';
 
-config();
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const DB_URL = process.env[databaseConfig[NODE_ENV].DB_URL]!;
