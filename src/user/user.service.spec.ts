@@ -10,7 +10,7 @@ import {
 } from '../common/config/database.tokens.constants';
 import { NotificationService } from '../shared/notification/notification.service';
 
-import { CreateRoleDTO, CreateUserDTO } from './user.dto';
+import { CreateRoleDTO, CreateUserDTO, LoginUserDTO } from './user.dto';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
@@ -62,136 +62,225 @@ describe('UserService', () => {
     service = testingModule.get<UserService>(UserService);
     spyUserRepository = testingModule.get(USER_REPOSITORY_TOKEN);
     spyRoleRepository = testingModule.get(ROLE_REPOSITORY_TOKEN);
-  });
-
-  it('should save an user in the database', async () => {
-    const params: CreateUserDTO = {
-      businessName: 'TestName',
-      email: 'testing@gmail.com',
-      firstName: 'Test',
-      lastName: 'TestlastName',
-      password: 'Password1?',
-      phoneNumber: '08135566778',
-    };
     spyUserRepository.createQueryBuilder = user.createQueryBuilder;
-    spyUserRepository.create = user.create;
-    expect(await service.register(params)).toBeDefined();
-  });
-  it('should checked user exist in the database', async () => {
-    const params: CreateUserDTO = {
-      businessName: 'TestName',
-      email: 'testing@gmail.com',
-      firstName: 'Test',
-      lastName: 'TestlastName',
-      password: 'Password1?',
-      phoneNumber: '08135566778',
-    };
-    spyUserRepository.createQueryBuilder = user.createQueryBuilder;
-    spyUserRepository.create = user.create;
-    try {
-      await service.register(params);
-    } catch (e) {
-      expect(e.response.messages).toEqual({
-        email: 'Email already exist',
-        phoneNumber: 'Phone Number already exist',
-      });
-    }
   });
 
-  it('should checked email exist in the database', async () => {
-    const params: CreateUserDTO = {
-      businessName: 'TestName',
-      email: 'test1@gmail.com',
-      firstName: 'Test',
-      lastName: 'TestlastName',
-      password: 'Password1?',
-      phoneNumber: '08135566770',
-    };
-    spyUserRepository.createQueryBuilder = user.createQueryBuilder;
-    spyUserRepository.create = user.create;
-    try {
-      await service.register(params);
-    } catch (e) {
-      expect(e.response.messages).toEqual({
-        email: 'Email already exist',
-      });
-    }
+  describe('register', () => {
+    it('should save an user in the database', async () => {
+      const params: CreateUserDTO = {
+        businessName: 'TestName',
+        email: 'testing@gmail.com',
+        firstName: 'Test',
+        lastName: 'TestlastName',
+        password: 'Password1?',
+        phoneNumber: '08135566778',
+      };
+      spyUserRepository.create = user.create;
+      expect(await service.register(params)).toBeDefined();
+    });
+
+    it('should checked user exist in the database', async () => {
+      const params: CreateUserDTO = {
+        businessName: 'TestName',
+        email: 'testing@gmail.com',
+        firstName: 'Test',
+        lastName: 'TestlastName',
+        password: 'Password1?',
+        phoneNumber: '08135566778',
+      };
+      spyUserRepository.create = user.create;
+      try {
+        await service.register(params);
+      } catch (e) {
+        expect(e.response.messages).toEqual({
+          email: 'Email already exist',
+          phoneNumber: 'Phone Number already exist',
+        });
+      }
+    });
+
+    it('should checked email exist in the database', async () => {
+      const params: CreateUserDTO = {
+        businessName: 'TestName',
+        email: 'test1@gmail.com',
+        firstName: 'Test',
+        lastName: 'TestlastName',
+        password: 'Password1?',
+        phoneNumber: '08135566770',
+      };
+      spyUserRepository.create = user.create;
+      try {
+        await service.register(params);
+      } catch (e) {
+        expect(e.response.messages).toEqual({
+          email: 'Email already exist',
+        });
+      }
+    });
+
+    it('should checked phoneNumber exist in the database', async () => {
+      const params: CreateUserDTO = {
+        businessName: 'TestName',
+        email: 'test0@gmail.com',
+        firstName: 'Test',
+        lastName: 'TestlastName',
+        password: 'Password1?',
+        phoneNumber: '08135566778',
+      };
+      spyUserRepository.create = user.create;
+      try {
+        await service.register(params);
+      } catch (e) {
+        expect(e.response.messages).toEqual({
+          phoneNumber: 'Phone Number already exist',
+        });
+      }
+    });
+
+    it('should checked existence in two databases', async () => {
+      const params: CreateUserDTO = {
+        businessName: 'TestName',
+        email: 'test1@gmail.com',
+        firstName: 'Test',
+        lastName: 'TestlastName',
+        password: 'Password1?',
+        phoneNumber: '08135566778',
+      };
+      spyUserRepository.create = user.create;
+      try {
+        await service.register(params);
+      } catch (e) {
+        expect(e.response.messages).toEqual({
+          email: 'Email already exist',
+          phoneNumber: 'Phone Number already exist',
+        });
+      }
+    });
   });
 
-  it('should checked phoneNumber exist in the database', async () => {
-    const params: CreateUserDTO = {
-      businessName: 'TestName',
-      email: 'test0@gmail.com',
-      firstName: 'Test',
-      lastName: 'TestlastName',
-      password: 'Password1?',
-      phoneNumber: '08135566778',
-    };
-    spyUserRepository.createQueryBuilder = user.createQueryBuilder;
-    spyUserRepository.create = user.create;
-    try {
-      await service.register(params);
-    } catch (e) {
-      expect(e.response.messages).toEqual({
-        phoneNumber: 'Phone Number already exist',
-      });
-    }
+  describe('createRole', () => {
+    it('should create a role in the database', async () => {
+      const params: CreateRoleDTO = {
+        name: 'Master Test',
+      };
+      spyRoleRepository.findOne = role.findOne;
+      spyRoleRepository.create = role.create;
+      expect(await service.createRole(params)).toBeDefined();
+    });
+
+    it('should throw an error for existence in the database', async () => {
+      const params: CreateRoleDTO = {
+        name: 'Master Test',
+      };
+      spyRoleRepository.findOne = role.findOne;
+      spyRoleRepository.create = role.create;
+      try {
+        await service.createRole(params);
+      } catch (e) {
+        expect(e.response.messages).toEqual({
+          name: 'Role already exist',
+        });
+      }
+    });
   });
 
-  it('should checked existence in two databases', async () => {
-    const params: CreateUserDTO = {
-      businessName: 'TestName',
-      email: 'test1@gmail.com',
-      firstName: 'Test',
-      lastName: 'TestlastName',
-      password: 'Password1?',
-      phoneNumber: '08135566778',
-    };
-    spyUserRepository.createQueryBuilder = user.createQueryBuilder;
-    spyUserRepository.create = user.create;
-    try {
-      await service.register(params);
-    } catch (e) {
-      expect(e.response.messages).toEqual({
-        email: 'Email already exist',
-        phoneNumber: 'Phone Number already exist',
-      });
-    }
+  describe('getRoleByName', () => {
+    it('should throw an error for none existence in the database', async () => {
+      const params = 'Master Testy';
+      spyRoleRepository.findOne = role.findOne;
+      try {
+        await service.getRoleByName(params);
+      } catch (e) {
+        expect(e.response.messages).toEqual({
+          name: 'Role does not exist',
+        });
+      }
+    });
   });
 
-  it('should create a role in the database', async () => {
-    const params: CreateRoleDTO = {
-      name: 'Master Test',
-    };
-    spyRoleRepository.findOne = role.findOne;
-    spyRoleRepository.create = role.create;
-    expect(await service.createRole(params)).toBeDefined();
+  describe('updateToken', () => {
+    it('should call update method of "userRepository"', async () => {
+      spyUserRepository.update = jest.fn();
+      service.updateToken('userId', 'token');
+      expect(spyUserRepository.update).toHaveBeenCalledWith('userId', {
+        token: 'token',
+      });
+    });
   });
 
-  it('should throw an error for existence in the database', async () => {
-    const params: CreateRoleDTO = {
-      name: 'Master Test',
+  describe('login', () => {
+    const nonExistingUser: LoginUserDTO = {
+      businessName: 'business name',
+      password: 'password',
+      phoneNumberOrEmail: 'wrongemail@email.com',
     };
-    spyRoleRepository.findOne = role.findOne;
-    spyRoleRepository.create = role.create;
-    try {
-      await service.createRole(params);
-    } catch (e) {
-      expect(e.response.messages).toEqual({
-        name: 'Role already exist',
-      });
-    }
-  });
 
-  it('should throw an error for none existence in the database', async () => {
-    const params = 'Master Testy';
-    spyRoleRepository.findOne = role.findOne;
-    try {
-      await service.getRoleByName(params);
-    } catch (e) {
-      expect(e.response.messages).toEqual({
-        name: 'Role does not exist',
-      });
-    }
+    const userWithWrongPassword: LoginUserDTO = {
+      businessName: 'business name',
+      password: 'password',
+      phoneNumberOrEmail: 'email@email.com',
+    };
+
+    const userWithWrongBusiness: LoginUserDTO = {
+      businessName: 'business name',
+      password: 'sudhons',
+      phoneNumberOrEmail: 'email@email.com',
+    };
+
+    const userWithValidCred1: LoginUserDTO = {
+      businessName: 'testBusiness',
+      password: 'sudhons',
+      phoneNumberOrEmail: 'email@email.com',
+    };
+
+    const userWithValidCred2: LoginUserDTO = {
+      businessName: 'testBusiness',
+      password: 'sudhons',
+      phoneNumberOrEmail: '08100000001',
+    };
+
+    it('should throw 404 Error if user does not exist', async () => {
+      try {
+        await service.login(nonExistingUser);
+      } catch (error) {
+        expect(error.response.messages).toEqual({
+          phoneNumberOrEmail: 'Invalid crendetials',
+        });
+      }
+    });
+
+    it('should throw 404 Error if password is wrong', async () => {
+      try {
+        await service.login(userWithWrongPassword);
+      } catch (error) {
+        expect(error.response.messages).toEqual({
+          password: 'Invalid crendetials',
+        });
+      }
+    });
+
+    it('should throw 404 Error if business is wrong', async () => {
+      try {
+        await service.login(userWithWrongBusiness);
+      } catch (error) {
+        expect(error.response.messages).toEqual({
+          businessName: 'Invalid crendetials',
+        });
+      }
+    });
+
+    it('should successfully logs user in with email', async () => {
+      const logedInUser = await service.login(userWithValidCred1);
+
+      expect(logedInUser.email).toEqual(userWithValidCred1.phoneNumberOrEmail);
+    });
+
+    it('should successfully logs user in with phone number', async () => {
+      const logedInUser = await service.login(userWithValidCred2);
+
+      expect(logedInUser.phoneNumber).toEqual(
+        userWithValidCred2.phoneNumberOrEmail,
+      );
+    });
   });
 });

@@ -36,7 +36,6 @@
     "graphql": "^14.3.1",
     "graphql-tools": "^4.0.4",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.2.6",
     "pg": "^7.11.0",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
