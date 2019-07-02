@@ -1,4 +1,3 @@
-import { User } from 'src/user/user.entity';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
@@ -6,12 +5,12 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
-  ObjectID,
-  ObjectIdColumn,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Branch } from '../branch/branch.entity';
+import { User } from '../user/user.entity';
 
 import { BusinessType } from './businessType.entity';
 
@@ -25,12 +24,12 @@ export class Business extends BaseEntity {
   public branches?: Branch[];
 
   @Field({ nullable: true })
-  @Column()
+  @Column({ nullable: true })
   public email?: string;
 
   @Field(() => ID)
-  @ObjectIdColumn()
-  public id: ObjectID;
+  @PrimaryGeneratedColumn('uuid')
+  public id: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
