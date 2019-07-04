@@ -3,9 +3,8 @@ import {
   BaseEntity,
   Column,
   Entity,
-  ObjectID,
-  ObjectIdColumn,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Business } from './business.entity';
@@ -17,8 +16,8 @@ export class BusinessType extends BaseEntity {
   public businesses: Business[];
 
   @Field(() => ID)
-  @ObjectIdColumn()
-  public id: ObjectID;
+  @PrimaryGeneratedColumn()
+  public id: string;
 
   @Field()
   @Column()
