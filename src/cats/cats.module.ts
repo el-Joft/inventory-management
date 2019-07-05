@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { catProviders } from 'src/cats/cats.providers';
 
+import { catProviders } from '../cats/cats.providers';
 import { DatabaseModule } from '../database/database.module';
 
 import { CatsResolver } from './cats.resolver';

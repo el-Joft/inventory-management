@@ -1,4 +1,3 @@
 # Inventory management
 
-
-![coverage](https://gitlab.com/gitlab-org/gitlab-ce/badges/develop/coverage.svg?job=coverage)
+[![Build Status](https://travis-ci.com/el-Joft/inventory-management.svg?token=BFq3KzWqxMtNd3CJbq2v&branch=develop)](https://travis-ci.com/el-Joft/inventory-management)
