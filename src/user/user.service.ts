@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   HttpStatus,
   Inject,
@@ -9,16 +10,17 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { Repository } from 'typeorm';
 
+import { Business } from '../business/business.entity';
 import { BusinessService } from '../business/business.service';
 import {
   ROLE_REPOSITORY_TOKEN,
   USER_REPOSITORY_TOKEN,
 } from '../common/config/database.tokens.constants';
 import { NotificationService } from '../shared/notification/notification.service';
-import { generateEmailToken } from '../utils/helperFunctions';
+import { generateEmailToken, isEmail } from '../utils/helperFunctions';
 
 import { Role } from './role.entity';
-import { CreateRoleDTO, CreateUserDTO } from './user.dto';
+import { CreateRoleDTO, CreateUserDTO, LoginUserDTO } from './user.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -62,6 +64,64 @@ export class UserService {
     }
 
     return role;
+  }
+
+  public async login(userDTO: LoginUserDTO): Promise<User> {
+    const {
+      businessName,
+      phoneNumberOrEmail,
+      password,
+    }: LoginUserDTO = userDTO;
+
+    const queryString = isEmail(phoneNumberOrEmail)
+      ? 'user.email = :email'
+      : 'user.phoneNumber = :phoneNumber';
+
+    const queryObj = isEmail(phoneNumberOrEmail)
+      ? { email: phoneNumberOrEmail }
+      : { phoneNumber: phoneNumberOrEmail };
+
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.businesses', 'businesses')
+      .leftJoinAndSelect('user.role', 'role')
+      .where(queryString, queryObj)
+      .getOne();
+
+    if (!user) {
+      throw new BadRequestException({
+        messages: {
+          phoneNumberOrEmail: 'Invalid crendetials',
+        },
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    if (!isValidPassword) {
+      throw new BadRequestException({
+        messages: {
+          password: 'Invalid crendetials',
+        },
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+
+    const isValidBusinessName = user.businesses.some(
+      (business: Business): boolean => business.name === businessName,
+    );
+
+    if (!isValidBusinessName) {
+      throw new BadRequestException({
+        messages: {
+          businessName: 'Invalid crendetials',
+        },
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+
+    return user;
   }
 
   public async register(userDTO: CreateUserDTO): Promise<User> {
@@ -132,5 +192,9 @@ export class UserService {
     Logger.log(mail);
 
     return newUser;
+  }
+
+  public updateToken(id: string, token: string): void {
+    this.userRepository.update(id, { token });
   }
 }

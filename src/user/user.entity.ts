@@ -69,5 +69,5 @@ export class User extends BaseEntity {
   public role: Role;
 
   @Column({ nullable: true })
-  public token: string;
+  public token?: string;
 }

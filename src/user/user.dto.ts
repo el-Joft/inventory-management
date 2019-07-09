@@ -46,6 +46,27 @@ export class CreateUserDTO {
   public phoneNumber: string;
 }
 
+@InputType()
+export class LoginUserDTO {
+  @IsNotEmpty()
+  @Length(1, 255)
+  @Field()
+  public businessName: string;
+
+  @IsNotEmpty()
+  @Length(1, 255)
+  @Field()
+  public password: string;
+
+  @IsNotEmpty()
+  @Length(1, 255)
+  @Matches(/^\w{2,}@\w{2,}\.\w{2,}|[0]\d{7,15}$/, {
+    message: 'isPhoneNumberOrEmail is neither a phone number nor an Email',
+  })
+  @Field()
+  public phoneNumberOrEmail: string;
+}
+
 @ObjectType()
 class MessageType {
   @Field()
@@ -59,10 +80,10 @@ class MessageType {
 export class UserRO {
   @Field(() => MessageType)
   public message: MessageType;
-  @Field()
+  @Field({ nullable: true })
   public token?: string;
   @Field(() => User)
-  public user: Promise<User>;
+  public user: Promise<User> | User;
 }
 
 export class CreateRoleDTO {
